@@ -12,7 +12,7 @@ jobs:
   install_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
+    name: Install Job
     steps:
       - uses: actions/checkout@v3
         with:
@@ -23,16 +23,18 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: npm install
-  testing_job:
-    name: "Testing Job"
-    steps:
-      - run: npm run test
-    needs: 
-      install_job
+      - name: Testing
+        run: npm run test
   build_deploy_job:
+    runs-on: ubuntu-latest
     steps:
-      - name: Build Angular App
-        run: npm run build
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
