@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Testing
-        run: npm run test
+        run: npm run test --browsers=ChromeHeadless --watch=false
   build_deploy_job:
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +35,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Build Angular App
+        run: npm build
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
