@@ -9,10 +9,10 @@ on:
     branches:
       - production
 jobs:
-  install_job:
+  testing_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Install Job
+    name: Testing Job
     steps:
       - uses: actions/checkout@v3
         with:
@@ -24,19 +24,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Testing
-        run: npm run test --browsers=ChromeHeadless --watch=false
-  build_deploy_job:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
+        run: npm run test --watch=false --browsers=ChromeHeadless
       - name: Build Angular App
         run: npm build
       - name: Build And Deploy
