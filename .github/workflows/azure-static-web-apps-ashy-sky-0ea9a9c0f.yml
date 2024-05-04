@@ -25,6 +25,18 @@ jobs:
         run: npm install
       - name: Testing
         run: npm run test --watch=false --browsers=ChromeHeadless
+  build_deploy_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
       - name: Build Angular App
         run: npm build
       - name: Build And Deploy
@@ -41,7 +53,7 @@ jobs:
           output_location: "{angular.json#Object.values(data.projects)[0].architect.build.options.outputPath}" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
     needs: 
-      install_job
+      testing_job
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
